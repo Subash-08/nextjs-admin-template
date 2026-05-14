@@ -2,15 +2,23 @@ import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import Container from '@/components/layout/Container';
 import WorkGrid from '@/components/works/WorkGrid';
-import { getFeaturedProjects } from '@/lib/data/project.queries';
-import Spline from '@/components/spline/Spline';
+import { getFeaturedProjects } from '@/services/project.service';
+import { generateSEO } from '@/lib/seo';
+import { OrganizationStructuredData } from '@/components/seo/StructuredData';
 
-export const revalidate = 60; // ISR
+export const revalidate = 3600; // ISR - 1 hour
+
+export const metadata = generateSEO({
+    title: 'Home',
+    description: 'I help brands and startups build scalable, user-centric interfaces using modern technologies.',
+    keywords: ['portfolio', 'nextjs', 'react', 'web development'],
+});
 
 export default async function HomePage() {
     const featuredProjects = await getFeaturedProjects();
     return (
         <main>
+            <OrganizationStructuredData />
             {/* Hero Section */}
             <section className="pt-32 pb-20 md:pt-48 md:pb-32 bg-white">
                 <Container>
@@ -39,7 +47,6 @@ export default async function HomePage() {
                     </div>
                 </Container>
             </section>
-            {/* <Spline /> */}
             {/* Featured Projects */}
             <section className="py-20 bg-gray-50 border-t border-gray-100">
                 <Container>

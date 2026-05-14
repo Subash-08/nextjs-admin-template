@@ -75,7 +75,9 @@ export async function GET() {
         }
 
         if (needsResequencing && sanitizedBoxes.length > 0) {
-            console.warn('Portfolio Layout integrity issue detected. Resequencing...');
+        if (process.env.NODE_ENV === 'development') {
+            console.warn('[DEBUG] Portfolio Layout integrity issue detected. Resequencing...');
+        }
             // We can trigger a background fix or just fix in memory?
             // To be safe and persistent, we should fix in DB.
             // WE WONT BLOCK the response for this, but we should fire and forget or await if critical.

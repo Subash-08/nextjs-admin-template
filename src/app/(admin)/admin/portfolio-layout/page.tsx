@@ -60,19 +60,22 @@ export default function PortfolioLayoutPage() {
 
     if (loading && boxes.length === 0) {
         return (
-            <div className="flex items-center justify-center min-h-[400px]">
-                <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+            <div className="flex items-center justify-center min-h-[360px] bg-white border border-gray-200 rounded-xl">
+                <div className="text-center">
+                    <Loader2 className="w-7 h-7 animate-spin text-blue-600 mx-auto mb-2" />
+                    <p className="text-sm text-gray-500">Loading layout...</p>
+                </div>
             </div>
         );
     }
 
     if (error) {
         return (
-            <div className="p-8 text-center text-red-500">
-                <p>{error}</p>
+            <div className="flex flex-col items-center justify-center min-h-[360px] bg-white border border-red-100 rounded-xl text-center px-6">
+                <p className="text-sm font-medium text-red-600 mb-3">{error}</p>
                 <button
                     onClick={fetchLayout}
-                    className="mt-4 px-4 py-2 bg-blue-100 text-blue-700 rounded-md hover:bg-blue-200"
+                    className="px-4 py-2 text-sm font-semibold bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition-colors"
                 >
                     Retry
                 </button>
@@ -81,15 +84,16 @@ export default function PortfolioLayoutPage() {
     }
 
     return (
-        <div className="space-y-8">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div className="space-y-6">
+            {/* Page Header */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold text-gray-900">Portfolio Layout</h1>
-                    <p className="text-gray-500 mt-1">
-                        Configure the grid layout for the "All" works tab.
+                    <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Portfolio Layout</h1>
+                    <p className="text-sm text-gray-500 mt-0.5">
+                        Configure the grid layout for the &ldquo;All&rdquo; works tab. {boxes.length > 0 && `${boxes.length} box${boxes.length !== 1 ? 'es' : ''} configured.`}
                     </p>
                 </div>
-                <div className="flex gap-3">
+                <div className="flex items-center gap-2.5 shrink-0">
                     <DeleteLastBoxButton
                         disabled={boxes.length === 0}
                         onDeleted={handleBoxDeleted}

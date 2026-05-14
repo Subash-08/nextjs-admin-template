@@ -91,7 +91,8 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
                 onSuccess={onUpload}
                 onError={(err, { widget }) => {
                     console.error('Cloudinary Upload Error:', err);
-                    alert(`Upload Failed: ${err?.statusText || err?.message || 'Check console for details'}`);
+                    const e = err as any;
+                    alert(`Upload Failed: ${e?.statusText || e?.message || 'Check console for details'}`);
                 }}
                 uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}
                 options={{
@@ -108,7 +109,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
                             type="button"
                             disabled={disabled}
                             onClick={onClick}
-                            className="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 py-2 px-4 rounded-md hover:bg-gray-300 dark:hover:bg-gray-600 transition flex items-center gap-2"
+                            className="bg-gray-200 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-300 transition flex items-center gap-2"
                         >
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                                 <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd" />

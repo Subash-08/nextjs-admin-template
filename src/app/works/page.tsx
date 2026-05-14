@@ -1,21 +1,21 @@
-import { getPortfolioProjects } from '@/lib/data/project.queries';
 import Container from '@/components/layout/Container';
 import PortfolioContainer from '@/components/works/PortfolioContainer';
-import { Metadata } from 'next';
-import connectToDB from '@/lib/db';
+import { generateSEO } from '@/lib/seo';
+import dbConnect from '@/lib/dbConnect';
 import Category from '@/models/Category';
 
-export const metadata: Metadata = {
+export const metadata = generateSEO({
     title: 'Works',
     description: 'Explore my portfolio of web development projects, SaaS applications, and digital products.',
-};
+    keywords: ['portfolio', 'projects', 'case studies', 'web development'],
+});
 
-export const revalidate = 60;
+export const revalidate = 3600; // 1 hour
 
 // Fetch categories for the tabs
 async function getCategories() {
     try {
-        await connectToDB();
+        await dbConnect();
         const categories = await Category.find().sort({ name: 1 }).lean();
         return JSON.parse(JSON.stringify(categories));
     } catch (error) {

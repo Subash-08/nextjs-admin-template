@@ -3,6 +3,7 @@ import Project from '@/models/Project';
 import Category from '@/models/Category';
 import dbConnect from '@/lib/db';
 import Link from 'next/link';
+import { FolderKanban, CheckCircle2, FileEdit, FolderTree, Plus, ArrowRight } from 'lucide-react';
 
 export default async function AdminDashboardPage() {
     await dbConnect();
@@ -12,40 +13,121 @@ export default async function AdminDashboardPage() {
     const publishedProjects = await Project.countDocuments({ status: 'published' });
     const draftProjects = await Project.countDocuments({ status: 'draft' });
 
-    return (
-        <div>
-            <h1 className="text-3xl font-bold mb-8 text-gray-900 dark:text-white">Dashboard Overview</h1>
+    const stats = [
+        {
+            label: 'Total Projects',
+            value: projectCount,
+            icon: FolderKanban,
+            color: 'text-blue-600',
+            bg: 'bg-blue-50',
+            border: 'border-blue-100',
+        },
+        {
+            label: 'Published',
+            value: publishedProjects,
+            icon: CheckCircle2,
+            color: 'text-emerald-600',
+            bg: 'bg-emerald-50',
+            border: 'border-emerald-100',
+        },
+        {
+            label: 'Drafts',
+            value: draftProjects,
+            icon: FileEdit,
+            color: 'text-amber-600',
+            bg: 'bg-amber-50',
+            border: 'border-amber-100',
+        },
+        {
+            label: 'Categories',
+            value: categoryCount,
+            icon: FolderTree,
+            color: 'text-violet-600',
+            bg: 'bg-violet-50',
+            border: 'border-violet-100',
+        },
+    ];
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-                    <h3 className="text-gray-500 dark:text-gray-400 text-sm font-medium uppercase">Total Projects</h3>
-                    <p className="mt-2 text-3xl font-semibold text-gray-900 dark:text-white">{projectCount}</p>
-                </div>
-                <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-                    <h3 className="text-gray-500 dark:text-gray-400 text-sm font-medium uppercase">Published</h3>
-                    <p className="mt-2 text-3xl font-semibold text-green-600 dark:text-green-400">{publishedProjects}</p>
-                </div>
-                <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-                    <h3 className="text-gray-500 dark:text-gray-400 text-sm font-medium uppercase">Drafts</h3>
-                    <p className="mt-2 text-3xl font-semibold text-yellow-600 dark:text-yellow-400">{draftProjects}</p>
-                </div>
-                <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-                    <h3 className="text-gray-500 dark:text-gray-400 text-sm font-medium uppercase">Total Categories</h3>
-                    <p className="mt-2 text-3xl font-semibold text-blue-600 dark:text-blue-400">{categoryCount}</p>
-                </div>
+    const quickActions = [
+        {
+            label: 'Create New Project',
+            href: '/admin/projects/create',
+            description: 'Add a new portfolio project',
+        },
+        {
+            label: 'Manage Projects',
+            href: '/admin/projects',
+            description: 'View and edit all projects',
+        },
+        {
+            label: 'Create Category',
+            href: '/admin/categories/create',
+            description: 'Add a new project category',
+        },
+        {
+            label: 'Portfolio Layout',
+            href: '/admin/portfolio-layout',
+            description: 'Configure the portfolio grid',
+        },
+    ];
+
+    return (
+        <div className="space-y-8">
+            {/* Page Header */}
+            <div>
+                <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Dashboard</h1>
+                <p className="text-sm text-gray-500 mt-1">Overview of your portfolio content</p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-                    <h3 className="text-lg font-bold mb-4 text-gray-900 dark:text-white">Quick Actions</h3>
-                    <div className="flex flex-col space-y-4">
-                        <Link href="/admin/projects/create" className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 font-medium">
-                            + Create New Project
+            {/* Stat Cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
+                {stats.map((stat) => {
+                    const Icon = stat.icon;
+                    return (
+                        <div
+                            key={stat.label}
+                            className={`bg-white rounded-xl border ${stat.border} p-5 flex items-center gap-4 shadow-sm`}
+                        >
+                            <div className={`${stat.bg} ${stat.color} p-3 rounded-xl shrink-0`}>
+                                <Icon size={20} />
+                            </div>
+                            <div className="min-w-0">
+                                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider truncate">
+                                    {stat.label}
+                                </p>
+                                <p className={`text-3xl font-bold mt-0.5 ${stat.color}`}>
+                                    {stat.value}
+                                </p>
+                            </div>
+                        </div>
+                    );
+                })}
+            </div>
+
+            {/* Quick Actions */}
+            <div>
+                <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">
+                    Quick Actions
+                </h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {quickActions.map((action) => (
+                        <Link
+                            key={action.href}
+                            href={action.href}
+                            className="group bg-white border border-gray-200 rounded-xl p-4 flex items-center justify-between hover:border-blue-300 hover:shadow-sm transition-all duration-150"
+                        >
+                            <div>
+                                <p className="text-sm font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
+                                    {action.label}
+                                </p>
+                                <p className="text-xs text-gray-500 mt-0.5">{action.description}</p>
+                            </div>
+                            <ArrowRight
+                                size={16}
+                                className="text-gray-300 group-hover:text-blue-500 group-hover:translate-x-0.5 transition-all shrink-0 ml-4"
+                            />
                         </Link>
-                        <Link href="/admin/categories/create" className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 font-medium">
-                            + Create New Category
-                        </Link>
-                    </div>
+                    ))}
                 </div>
             </div>
         </div>

@@ -26,8 +26,8 @@ export default function ResponsiveImage({
     className = '',
     priority = false,
     fill = false,
-    sizes = '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw',
-    quality = 90,
+    sizes = '100vw',
+    quality = 85,
 }: ResponsiveImageProps) {
     const [isLoading, setIsLoading] = useState(true);
 

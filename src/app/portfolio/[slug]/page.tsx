@@ -30,7 +30,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
     }
 
     return (
-        <article className="min-h-screen bg-white dark:bg-gray-900">
+        <article className="min-h-screen bg-white">
             {/* Hero Section */}
             <div className="w-full h-[60vh] relative">
                 <ResponsiveImage
@@ -50,14 +50,14 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
 
             <div className="container mx-auto px-4 py-16">
                 {/* Project Info Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-16 border-b border-gray-200 dark:border-gray-700 pb-12">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-16 border-b border-gray-200 pb-12">
                     <div>
                         <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-2">Client</h3>
-                        <p className="text-lg font-medium text-gray-900 dark:text-white">{project.clientName}</p>
+                        <p className="text-lg font-medium text-gray-900">{project.clientName}</p>
                     </div>
                     <div>
                         <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-2">Industry</h3>
-                        <p className="text-lg font-medium text-gray-900 dark:text-white">{project.clientIndustry}</p>
+                        <p className="text-lg font-medium text-gray-900">{project.clientIndustry}</p>
                     </div>
                     <div>
                         <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-2">Services</h3>
@@ -86,28 +86,28 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
                     <div className="lg:col-span-8 space-y-12">
                         {project.overview && (
                             <section>
-                                <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Overview</h2>
-                                <div className="prose dark:prose-invert max-w-none whitespace-pre-wrap">{project.overview}</div>
+                                <h2 className="text-2xl font-bold mb-4 text-gray-900">Overview</h2>
+                                <div className="prose max-w-none whitespace-pre-wrap">{project.overview}</div>
                             </section>
                         )}
 
                         {project.problemStatement && (
                             <section>
-                                <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">The Challenge</h2>
-                                <div className="prose dark:prose-invert max-w-none whitespace-pre-wrap">{project.problemStatement}</div>
+                                <h2 className="text-2xl font-bold mb-4 text-gray-900">The Challenge</h2>
+                                <div className="prose max-w-none whitespace-pre-wrap">{project.problemStatement}</div>
                             </section>
                         )}
 
                         {project.processSteps && project.processSteps.length > 0 && (
                             <section>
-                                <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Process</h2>
+                                <h2 className="text-2xl font-bold mb-4 text-gray-900">Process</h2>
                                 <div className="space-y-4">
                                     {project.processSteps.map((step: string, idx: number) => (
                                         <div key={idx} className="flex items-start">
                                             <span className="flex-shrink-0 h-8 w-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold mr-4">
                                                 {idx + 1}
                                             </span>
-                                            <p className="text-gray-700 dark:text-gray-300 mt-1">{step}</p>
+                                            <p className="text-gray-700 mt-1">{step}</p>
                                         </div>
                                     ))}
                                 </div>
@@ -116,7 +116,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
 
                         {project.galleryImages && project.galleryImages.length > 0 && (
                             <section>
-                                <h2 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">Gallery</h2>
+                                <h2 className="text-2xl font-bold mb-6 text-gray-900">Gallery</h2>
                                 <div className="space-y-8">
                                     {project.galleryImages.map((img: any, idx: number) => (
                                         <ResponsiveImage
@@ -134,9 +134,9 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
 
                     <div className="lg:col-span-4 space-y-8">
                         {project.challenges && project.challenges.length > 0 && (
-                            <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-xl">
-                                <h3 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">Key Challenges</h3>
-                                <ul className="list-disc list-inside space-y-2 text-gray-600 dark:text-gray-300">
+                            <div className="bg-gray-50 p-6 rounded-xl">
+                                <h3 className="text-xl font-bold mb-4 text-gray-900">Key Challenges</h3>
+                                <ul className="list-disc list-inside space-y-2 text-gray-600">
                                     {project.challenges.map((c: string, idx: number) => (
                                         <li key={idx}>{c}</li>
                                     ))}
@@ -145,9 +145,9 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
                         )}
 
                         {project.solution && project.solution.length > 0 && (
-                            <div className="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-xl">
-                                <h3 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">Our Solution</h3>
-                                <ul className="list-disc list-inside space-y-2 text-gray-600 dark:text-gray-300">
+                            <div className="bg-blue-50 p-6 rounded-xl">
+                                <h3 className="text-xl font-bold mb-4 text-gray-900">Our Solution</h3>
+                                <ul className="list-disc list-inside space-y-2 text-gray-600">
                                     {project.solution.map((s: string, idx: number) => (
                                         <li key={idx}>{s}</li>
                                     ))}

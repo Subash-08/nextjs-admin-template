@@ -9,7 +9,7 @@ export default async function PortfolioPage() {
 
     return (
         <div className="container mx-auto px-4 py-12">
-            <h1 className="text-5xl font-bold mb-12 text-center text-gray-900 dark:text-white">Our Portfolio</h1>
+            <h1 className="text-5xl font-bold mb-12 text-center text-gray-900">Our Portfolio</h1>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {publishedProjects.length === 0 ? (
@@ -17,7 +17,7 @@ export default async function PortfolioPage() {
                 ) : (
                     publishedProjects.map((project: any) => (
                         <Link key={project._id} href={`/portfolio/${project.slug}`} className="group block">
-                            <div className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
+                            <div className="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
                                 <div className="relative">
                                     <ResponsiveImage
                                         src={project.thumbnail?.url || '/placeholder.jpg'}
@@ -29,8 +29,8 @@ export default async function PortfolioPage() {
                                 <div className="p-6">
                                     <div className="flex justify-between items-start">
                                         <div>
-                                            <h3 className="text-xl font-bold text-gray-900 dark:text-white group-hover:text-blue-600 transition-colors">{project.title}</h3>
-                                            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{project.clientIndustry}</p>
+                                            <h3 className="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors">{project.title}</h3>
+                                            <p className="text-sm text-gray-500 mt-1">{project.clientIndustry}</p>
                                         </div>
                                     </div>
                                 </div>

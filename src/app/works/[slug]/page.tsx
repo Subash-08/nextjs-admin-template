@@ -1,6 +1,7 @@
 import { getProjectBySlug, getRelatedProjects } from '@/lib/data/project.queries';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import { siteConfig } from '@/config/site';
 import Link from 'next/link';
 import { ExternalLink, ArrowLeft } from 'lucide-react';
 import Container from '@/components/layout/Container';
@@ -11,6 +12,8 @@ import CaseStudyMetrics from '@/components/case-study/CaseStudyMetrics';
 import CaseStudyTechStack from '@/components/case-study/CaseStudyTechStack';
 import CaseStudyTestimonial from '@/components/case-study/CaseStudyTestimonial';
 import WorkCard from '@/components/works/WorkCard';
+import ProjectStructuredData from '@/components/seo/ProjectStructuredData';
+import CaseStudyStructuredData from '@/components/seo/CaseStudyStructuredData';
 
 interface PageProps {
     params: Promise<{ slug: string }>;
@@ -23,11 +26,61 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     const project = await getProjectBySlug(slug);
     if (!project) return { title: 'Project Not Found' };
 
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+
     return {
-        title: project.seoTitle || project.title,
-        description: project.seoDescription || project.shortSummary,
+        title: project.seoTitle || `${project.title} | Portfolio`,
+        description: project.seoDescription || project.description || project.shortSummary,
+        keywords: project.tags?.join(', '),
+        
         openGraph: {
-            images: [project.ogImage?.url || project.coverImage?.url || ''],
+            title: project.seoTitle || project.title,
+            description: project.seoDescription || project.description || project.shortSummary,
+            url: `/works/${project.slug}`,
+            siteName: siteConfig.name,
+            images: [
+                {
+                    url: project.ogImage?.url || project.coverImage?.url || '/default-og.jpg',
+                    width: 1200,
+                    height: 630,
+                    alt: project.title,
+                },
+                ...(project.galleryImages?.slice(0, 3).map((img: any) => ({
+                    url: img.url,
+                    width: 1200,
+                    height: 630,
+                    alt: img.alt || project.title,
+                })) || []),
+            ],
+            locale: 'en_US',
+            type: 'article',
+            publishedTime: project.publishedAt ? new Date(project.publishedAt).toISOString() : undefined,
+            modifiedTime: project.updatedAt ? new Date(project.updatedAt).toISOString() : undefined,
+            tags: project.tags,
+        },
+        
+        twitter: {
+            card: 'summary_large_image',
+            title: project.seoTitle || project.title,
+            description: project.seoDescription || project.description || project.shortSummary,
+            images: [project.ogImage?.url || project.coverImage?.url || '/default-og.jpg'],
+            creator: siteConfig.seo.twitterHandle,
+        },
+        
+        alternates: {
+            canonical: project.canonicalUrl || `/works/${project.slug}`,
+        },
+        
+        robots: {
+            index: true,
+            follow: true,
+            googleBot: {
+                index: true,
+                follow: true,
+                'max-video-preview': -1,
+                'max-image-preview': 'large',
+                'max-snippet': -1,
+            },
         },
     };
 }
@@ -42,10 +95,22 @@ export default async function CaseStudyPage({ params }: PageProps) {
 
     const relatedProjects = await getRelatedProjects(project._id as string, typeof project.categoryId === 'string' ? project.categoryId : (project.categoryId as any)?._id);
 
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+
     return (
-        <article className="pb-32 bg-white">
-            {/* 1. Hero Section */}
-            <CaseStudyHero project={project} />
+        <>
+            <ProjectStructuredData project={project} />
+            {project.problemStatement && (
+                <CaseStudyStructuredData
+                    project={project}
+                    challenge={project.problemStatement}
+                    solution={project.solution?.map((s: any) => typeof s === 'string' ? s : s.value).join('. ')}
+                    results={project.metrics}
+                />
+            )}
+            <article className="pb-32 bg-white">
+                {/* 1. Hero Section */}
+                <CaseStudyHero project={project} />
 
             {/* 2. Overview & Problem */}
             <section className="py-24 lg:py-32 relative">
@@ -204,5 +269,6 @@ export default async function CaseStudyPage({ params }: PageProps) {
                 </Container>
             </section>
         </article>
+        </>
     );
 }

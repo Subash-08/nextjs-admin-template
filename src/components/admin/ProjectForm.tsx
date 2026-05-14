@@ -264,7 +264,9 @@ export default function ProjectForm({ project, categories }: ProjectFormProps) {
                 unpublishDate: data.unpublishDate ? new Date(data.unpublishDate) : undefined,
             };
 
-            console.log('Submitting Project Data:', transformedData);
+            if (process.env.NODE_ENV === 'development') {
+                console.log('[DEBUG] Submitting Project Data:', transformedData);
+            }
 
             if (project) {
                 await editProject(project._id, transformedData);
@@ -277,7 +279,7 @@ export default function ProjectForm({ project, categories }: ProjectFormProps) {
             router.push('/admin/projects');
             router.refresh();
         } catch (error: any) {
-            console.error('Submission Error:', error);
+            console.error('[ProjectForm] Submission Error:', error);
             const errorMessage = error instanceof Error ? error.message : 'Failed to save project';
             showToast(errorMessage, 'error');
         } finally {
@@ -286,7 +288,9 @@ export default function ProjectForm({ project, categories }: ProjectFormProps) {
     };
 
     const onError = (errors: any) => {
-        console.log('Form Errors:', errors);
+        if (process.env.NODE_ENV === 'development') {
+            console.log('[DEBUG] Form Errors:', errors);
+        }
         showToast('Please correct the errors in the form.', 'error');
     };
 
@@ -294,32 +298,32 @@ export default function ProjectForm({ project, categories }: ProjectFormProps) {
     const hasErrors = (fields: string[]) => fields.some(field => errors[field as keyof ProjectFormValues]);
 
     return (
-        <div className="min-h-screen bg-gray-50/50 pb-20">
-            <form onSubmit={handleSubmit(onSubmit, onError)} className="max-w-7xl mx-auto px-6 py-8">
+        <div>
+            <form onSubmit={handleSubmit(onSubmit, onError)}>
 
                 {/* Header Action Bar */}
-                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
                     <div>
-                        <h1 className="text-3xl font-bold text-gray-900 tracking-tight">{project ? 'Edit Project' : 'Create New Project'}</h1>
-                        <p className="text-gray-500 mt-1">Manage content, media, and case study details.</p>
+                        <h1 className="text-2xl font-bold text-gray-900 tracking-tight">{project ? 'Edit Project' : 'New Project'}</h1>
+                        <p className="text-sm text-gray-500 mt-0.5">Manage content, media, and case study details.</p>
                     </div>
-                    <div className="flex items-center space-x-3 self-end sm:self-auto">
-                        <button type="button" onClick={() => router.back()} className="px-5 py-2.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-white hover:shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-gray-200">
+                    <div className="flex items-center gap-2.5 self-end sm:self-auto">
+                        <button type="button" onClick={() => router.back()} className="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-white hover:shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-gray-200">
                             Cancel
                         </button>
                         <button
                             type="submit"
                             disabled={loading}
-                            className="inline-flex justify-center items-center px-6 py-2.5 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-blue-300 disabled:cursor-not-allowed transition-all"
+                            className="inline-flex justify-center items-center px-5 py-2 border border-transparent rounded-lg shadow-sm text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-blue-300 disabled:cursor-not-allowed transition-all"
                         >
-                            {loading ? <Loader2 className="animate-spin mr-2" size={18} /> : <Save className="mr-2" size={18} />}
+                            {loading ? <Loader2 className="animate-spin mr-2" size={16} /> : <Save className="mr-2" size={16} />}
                             {loading ? 'Saving...' : 'Save Changes'}
                         </button>
                     </div>
                 </div>
 
                 {/* Top Navigation Tabs */}
-                <div className="bg-white rounded-xl shadow-sm border border-gray-200 mb-8 sticky top-6 z-30 overflow-hidden">
+                <div className="bg-white rounded-xl shadow-sm border border-gray-200 mb-6 sticky top-4 z-30 overflow-hidden">
                     <div className="flex overflow-x-auto no-scrollbar scroll-smooth">
                         <TabButton
                             label="Basics"
@@ -685,7 +689,7 @@ export default function ProjectForm({ project, categories }: ProjectFormProps) {
                     </div>
 
                     {/* Sidebar Settings (Sticky) */}
-                    <div className="lg:col-span-4 space-y-6 lg:sticky lg:top-24">
+                    <div className="lg:col-span-4 space-y-5 lg:sticky lg:top-20">
                         <Section title="Publishing" className="bg-white border-blue-100 shadow-md">
                             <div className="space-y-4">
                                 <InputGroup label="Status" error={errors.status}>

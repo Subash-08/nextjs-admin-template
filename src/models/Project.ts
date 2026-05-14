@@ -1,11 +1,14 @@
 import mongoose, { Schema, Document, Model } from 'mongoose';
+import { env } from '@/config/env';
 
 export interface IImage {
     url: string;
+    publicId?: string;
     alt?: string;
     caption?: string;
     width?: number;
     height?: number;
+    format?: string;
     aspectRatio?: string;
     fileSize?: number;
 }
@@ -75,16 +78,20 @@ export interface IProject extends Document {
 
     // System
     status: 'draft' | 'published' | 'archived';
+    createdBy?: mongoose.Types.ObjectId;
+    updatedBy?: mongoose.Types.ObjectId;
     createdAt: Date;
     updatedAt: Date;
 }
 
 const ImageSchema = new Schema({
     url: { type: String, required: true },
+    publicId: { type: String },
     alt: { type: String },
     caption: { type: String },
     width: { type: Number },
     height: { type: Number },
+    format: { type: String },
     aspectRatio: { type: String },
     fileSize: { type: Number },
 }, { _id: false });
@@ -171,10 +178,22 @@ const ProjectSchema: Schema = new Schema({
 
     // System
     status: { type: String, enum: ['draft', 'published', 'archived'], default: 'draft', index: true },
+    createdBy: { type: Schema.Types.ObjectId, ref: 'User' },
+    updatedBy: { type: Schema.Types.ObjectId, ref: 'User' },
 }, { timestamps: true });
 
+// Compound Indexes
+ProjectSchema.index({ status: 1, showInPortfolio: 1, displayOrder: 1 });
+ProjectSchema.index({ categoryId: 1, status: 1 });
+ProjectSchema.index({ publishDate: -1, status: 1 });
+ProjectSchema.index({ 
+  title: 'text', 
+  shortSummary: 'text', 
+  tags: 'text' 
+});
+
 // Prevent overwrite error for hot reloads
-if (process.env.NODE_ENV === 'development') {
+if (env.NODE_ENV === 'development') {
     delete mongoose.models.Project;
 }
 const Project: Model<IProject> = mongoose.models.Project || mongoose.model<IProject>('Project', ProjectSchema);

@@ -38,9 +38,11 @@ export async function getPortfolioProjects() {
             .populate('categoryId', 'name')
             .lean();
 
-        console.log(`[getPortfolioProjects] Found ${projects.length} projects`);
-        if (projects.length > 0) {
-            console.log('[getPortfolioProjects] First project sample:', JSON.stringify(projects[0].thumbnail, null, 2));
+        if (process.env.NODE_ENV === 'development') {
+            console.log(`[DEBUG] [getPortfolioProjects] Found ${projects.length} projects`);
+            if (projects.length > 0) {
+                console.log('[DEBUG] [getPortfolioProjects] First project sample:', JSON.stringify(projects[0].thumbnail, null, 2));
+            }
         }
 
         return serialize(projects);
@@ -53,7 +55,9 @@ export async function getPortfolioProjects() {
 export async function getProjectBySlug(slug: string) {
     await dbConnect();
     try {
-        console.log(`[getProjectBySlug] Fetching slug: "${slug}"`);
+        if (process.env.NODE_ENV === 'development') {
+            console.log(`[DEBUG] [getProjectBySlug] Fetching slug: "${slug}"`);
+        }
         const project = await Project.findOne({
             slug,
             status: 'published',
@@ -63,14 +67,17 @@ export async function getProjectBySlug(slug: string) {
             .lean();
 
         if (!project) {
-            console.log(`[getProjectBySlug] No published project found for slug: "${slug}"`);
-            // Debug: Check if it exists but is draft
-            const draft = await Project.findOne({ slug }).select('status').lean();
-            if (draft) console.log(`[getProjectBySlug] Project exists but status is: ${draft.status}`);
+            if (process.env.NODE_ENV === 'development') {
+                console.log(`[DEBUG] [getProjectBySlug] No published project found for slug: "${slug}"`);
+                const draft = await Project.findOne({ slug }).select('status').lean();
+                if (draft) console.log(`[DEBUG] [getProjectBySlug] Project exists but status is: ${draft.status}`);
+            }
             return null;
         }
 
-        console.log(`[getProjectBySlug] Project found: ${project.title}`);
+        if (process.env.NODE_ENV === 'development') {
+            console.log(`[DEBUG] [getProjectBySlug] Project found: ${project.title}`);
+        }
         return serialize(project);
     } catch (error) {
         console.error(`Error fetching project with slug ${slug}:`, error);

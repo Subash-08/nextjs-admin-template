@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
+import { siteConfig } from '@/config/site';
 import Container from './Container';
 import { Menu, X } from 'lucide-react';
 
@@ -22,6 +23,7 @@ export default function Navbar() {
     const navLinks = [
         { name: 'Home', href: '/' },
         { name: 'Works', href: '/works' },
+        { name: 'Blogs', href: '/blog' }
     ];
 
     const isActive = (path: string) => {
@@ -41,8 +43,8 @@ export default function Navbar() {
             <Container>
                 <nav className="flex items-center justify-between">
                     {/* Logo */}
-                    <Link href="/" className="text-xl font-bold tracking-tighter text-gray-900 z-50">
-                        PORTFOLIO<span className="text-blue-600">.</span>
+                    <Link href="/" className="text-xl font-bold tracking-tighter text-gray-900 z-50 uppercase">
+                        {siteConfig.name.split(' ')[0]}<span className="text-blue-600">.</span>
                     </Link>
 
                     {/* Desktop Nav */}
